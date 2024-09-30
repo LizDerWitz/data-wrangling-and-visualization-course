@@ -19,6 +19,11 @@ knitr::opts_chunk$set(message = FALSE,
 
 ```
 
+# assignment
+# <-
+# =
+
+
 # Dependencies
 
 ```{r}
@@ -46,10 +51,6 @@ data_demographics_raw <- read_csv("../data/raw/data_demographics_raw.csv") |>
 data_selfreport_raw <- read_csv("../data/raw/data_selfreport_raw.csv") |>
   janitor::clean_names()
 
-# affect attribution procedure
-data_amp_raw <- read_csv("../data/raw/data_amp_raw.csv") |>
-  janitor::clean_names()
-
 ```
 
 # Demographics
@@ -58,7 +59,39 @@ Clean the demographics data so that summaries of age and gender can be made in t
 
 ```{r}
 
-#dat_age_gender <- data_demographics_raw 
+#dat_age_gender <- data_demographics_raw %>%
+  #select(subject, trialcode, response) %>%
+#rename(unique_id = subject, item = trialcode, response = response)
+
+#Temp <- data_age_gender %>%
+  #filter(item == "age")
+
+#flexible ways of "string matching"
+#temp <- data_age_gender |>
+  #filter(item %in% c("age", "Age", "AGE")) / Any item of this vector
+
+#to wrangle the demographics out of the raw 
+dat_age_gender <- data_demographics_raw %>%
+#select useful columns
+select(subject, trialcode, response) %>%
+#rename
+rename(unique_id = subject, item = trialcode, response = response) %>%
+#retain rows that we need 
+filter(item == "age")
+  
+temp <- dat_age_gender %>%
+  distinct(response)
+
+temp2 <- dat_age_gender |>
+  #mutate allows you to create or change variables
+  mutate(unique_id_2 = unique_id * 2) %>%
+  filter(item != "gender") 
+#so we only have gender
+library(stringr)
+library(dplyr)
+
+temp2 <- dat_age_gender |>
+  mutate(response = str_remove_all(response, "\\D"), response = no_if(response,""))
 
 ```
 

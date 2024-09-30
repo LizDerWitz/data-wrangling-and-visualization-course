@@ -163,6 +163,7 @@ slice(mtcars, 2:n()) # this should have 31 rows
 
 # dplyr::select()
 
+
 ```
 
 ## rename
@@ -170,7 +171,7 @@ slice(mtcars, 2:n()) # this should have 31 rows
 ```{r}
 
 # dplyr::rename()
-
+# 
 ```
 
 ## mutate
