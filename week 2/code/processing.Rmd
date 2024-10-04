@@ -59,12 +59,19 @@ Clean the demographics data so that summaries of age and gender can be made in t
 
 ```{r}
 
-#dat_age_gender <- data_demographics_raw %>%
-  #select(subject, trialcode, response) %>%
-#rename(unique_id = subject, item = trialcode, response = response)
+# dat_age_gender <- data_demographics_raw %>%
+  # select(subject, trialcode, response) %>%
+# rename(unique_id = subject, item = trialcode, response = response)
+
+dat_age_gender <- data_demographics_raw %>%
+  select(subject, trialcode, response) %>%
+rename(unique_id = subject, item = trialcode, response = response)
 
 #Temp <- data_age_gender %>%
   #filter(item == "age")
+
+Temp1 <- dat_age_gender %>%
+  filter(item == "age")
 
 #flexible ways of "string matching"
 #temp <- data_age_gender |>
@@ -79,7 +86,7 @@ rename(unique_id = subject, item = trialcode, response = response) %>%
 #retain rows that we need 
 filter(item == "age")
   
-temp <- dat_age_gender %>%
+temp1 <- dat_age_gender %>%
   distinct(response)
 
 temp2 <- dat_age_gender |>
@@ -91,8 +98,32 @@ library(stringr)
 library(dplyr)
 
 temp2 <- dat_age_gender |>
-  mutate(response = str_remove_all(response, "\\D"), response = no_if(response,""))
+  mutate(response = str_remove_all(response, "[\\D]), response = no_if(response,""))
 
+#Homework
+
+dat_age_gender <- data_demographics_raw %>%
++   select(subject, trialcode, response) %>%
++ rename(unique_id = subject, item = trialcode, response = response)
+
+Temp1 <- dat_age_gender %>%
++   filter(item == "gender") %>%
+
+ Temp4 <- Temp1 %>%
+ mutate(response = str_remove_all(response, "[0-9]"),
+         response = na_if(response, ""))
+         
+         -> ora il numero è in NA 
+         
+F1 <- Temp4 %>%
+rename(unique_id = unique_id, item = item, gender = response)
+
+-> hai rinominato la colonna gender
+
+F1$gender[F1$gender == "yes"] <- NA
+
+mutate(response)
+         
 ```
 
 # Exclusions / data quality
