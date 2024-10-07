@@ -107,24 +107,52 @@ dat_age_gender <- data_demographics_raw %>%
 + rename(unique_id = subject, item = trialcode, response = response)
 
 Temp1 <- dat_age_gender %>%
-+   filter(item == "gender") %>%
-
- Temp4 <- Temp1 %>%
- mutate(response = str_remove_all(response, "[0-9]"),
-         response = na_if(response, ""))
+  filter(item == "gender")
          
-         -> ora il numero è in NA 
-         
-F1 <- Temp4 %>%
+F1 <- Temp1 %>%
 rename(unique_id = unique_id, item = item, gender = response)
 
 -> hai rinominato la colonna gender
 
+ F2 <- F1 %>%
+ mutate(gender = str_remove_all(gender, "[0-9]"), gender = na_if(gender, ""))
+         
+         -> ora il numero è in NA 
+
 F1$gender[F1$gender == "yes"] <- NA
 
 mutate(response)
-         
-```
+
+F3 <- F2 %>%
+mutate(gender = str_trim (tolower(gender)))
+
+#everything to lower cases
+
+F4 <- F3 %>%
+mutate(gender = replace(gender, !(gender %in% c("men","woman","male","female","non-binary","non binary")), NA_character_))
+
+#exclusion of characters we don't need, we just specified what we want included
+
+F5 <- F4 %>%
+mutate(gender = ifelse(gender == "woman","female", gender))
+ 
+# ora si chiamano tutte le donne, female
+
+F6 <- F5 %>%
+mutate(gender = ifelse(gender == "non binary","non-binary", gender))
+
+
+#Homework final coding
+
+dat_age_gender <- data_demographics_raw %>%
+select(subject, trialcode, response) %>%
+rename(unique_id = subject, item = trialcode, gender = response)%>%
+filter(item == "gender") %>%
+mutate(gender = str_remove_all(gender, "[0-9]"), gender = na_if(gender, "")) %>%
+mutate(gender = str_trim (tolower(gender))) %>%
+mutate(gender = replace(gender, !(gender %in% c("men","woman","male","female","non-binary","non binary")), NA_character_)) %>%
+mutate(gender = ifelse(gender == "woman","female", gender)) %>%
+mutate(gender = ifelse(gender == "non binary","non-binary", gender))
 
 # Exclusions / data quality
 
