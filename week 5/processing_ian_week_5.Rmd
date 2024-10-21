@@ -219,12 +219,6 @@ mutate(response = str_remove_all(response, "[^\\d.]"),
          response = as.numeric(response)) 
          
 ## count number of unique_ids with correct/wrong number of responses + Exclude them
-data_selfreport_raw
-
-data_selfreport_tidied3 <- data_selfreport_tidied2 %>%
-  left_join(data_selfreport_raw %>% select(unique_id, correct), by = "unique_id")
-
-
 
 
 ## check your exclusions worked - use: mutate, group_by, summarize, _join

@@ -1858,10 +1858,6 @@ na_if(response, ““), response = as.numeric(response))</p>
 <div id="count-number-of-unique_ids-with-correctwrong-number-of-responses-exclude-them" class="section level2">
 <h2>count number of unique_ids with correct/wrong number of responses +
 Exclude them</h2>
-<p>data_selfreport_raw</p>
-<p>data_selfreport_tidied3 &lt;- data_selfreport_tidied2 %&gt;%
-left_join(data_selfreport_raw %&gt;% select(unique_id, correct), by =
-“unique_id”)</p>
 </div>
 <div id="check-your-exclusions-worked---use-mutate-group_by-summarize-_join" class="section level2">
 <h2>check your exclusions worked - use: mutate, group_by, summarize,
