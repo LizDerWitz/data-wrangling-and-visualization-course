@@ -202,10 +202,9 @@ Create an exclusion variable `exclude_amp_completeness` based on the AMP having 
 
 # basic tidying
 data_selfreport_tidied <- data_selfreport_raw |>
-  rename(unique_id = subject,
-         item_type = trialcode) |>
-  select(unique_id, item_type, response) |>
-  filter(item_type != "instructions")
+  rename(item_type = trialcode) |>
+select(unique_id, item_type, response) |>
+filter(item_type != "instructions")
 
 ```
 
@@ -215,11 +214,27 @@ TODO - 14/10
 ## replace all non 1-7 numbers in `response` with NA
 data_selfreport_tidied2 <- data_selfreport_tidied |>
 mutate(response = str_remove_all(response, "[^\\d.]"),
-         response = na_if(response, ""),
-         response = as.numeric(response)) 
+         response = na_if(response, "")) 
          
 ## count number of unique_ids with correct/wrong number of responses + Exclude them
+data_selfreport_tidied3 <- data_selfreport_tidied2 %>%
+  mutate(correct = ifelse(row_number() <= nrow(data_selfreport_raw), 
+                          data_selfreport_raw$correct[row_number()], 
+                          NA)) # This method adds the correct column based on the row number, filling in with NA if there are fewer rows in 
+  
+data_selfreport_tidied3 <- data_selfreport_tidied3 |>
+  mutate(correct = ifelse(correct == 1, "right", "wrong"))
+  
+data_selfreport_right <- data_selfreport_tidied3 %>%
+  filter(correct == "right") %>%        # Filter for "right" answers
+  distinct(unique_id) %>%                # Get distinct unique IDs
+  count()                                # Count the number of unique IDs
 
+result <- data_selfreport_tidied3 %>%
+filter(correct == "right")
+
+# Print the result
+print(result)
 
 ## check your exclusions worked - use: mutate, group_by, summarize, _join
 
