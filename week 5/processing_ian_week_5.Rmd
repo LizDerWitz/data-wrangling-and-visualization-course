@@ -1,7 +1,7 @@
 ---
 title: "Evaluations of positive and negative stimuli using the Affective Misattribution Procedure (AMP) and self-reports"
 subtitle: "Data processing"
-author: "Template: Ian Hussey; content: [Student name]"
+author: "Template: Ian Hussey; content: Lisa Hernandez"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
@@ -91,8 +91,8 @@ dat_age <- data_demographics_raw |>
   filter(item == "age") |>
   rename(age = response) |>
   # remove non-numbers or decimals from age
-  mutate(age = str_remove_all(age, "[^\\d.]"),  # retains only digits and decimal points
-         age = na_if(age, ""),
+  mutate(age = str_remove_all(age, "[^\\d.]"),  # retains only digits (\\d) and decimal points (.)
+         age = na_if(age, ""), # marking as missing data if removed
          age = as.numeric(age)) |>
   select(unique_id, age)
   #select(-item) # alternative: negative selection
@@ -108,7 +108,7 @@ dat_gender <- data_demographics_raw |>
   rename(gender = response) |>
   # remove non-numbers or decimals from age
   mutate(gender = str_to_lower(gender),
-         gender = str_remove_all(gender, "[\\d.]"),
+         gender = str_remove_all(gender, "[\\d.]"),   #The regular expression [\\d.] specifies that it should match any digit (\\d) or decimal point (.), effectively cleaning the gender values of any numerical content.
          gender = na_if(gender, ""), 
          gender = case_when(gender == "woman" ~ "female",
                             gender == "yes" ~ NA_character_,
@@ -209,13 +209,25 @@ data_selfreport_tidied <- data_selfreport_raw |>
 
 ```
 
+#Homework
 TODO - 14/10
 
-- replace all non 1-7 numbers in `response` with NA
-- count number of unique_ids with correct/wrong number of responses
-- Exclude them
-- check your exclusions worked.
-- use: mutate, group_by, summarize, _join
+## replace all non 1-7 numbers in `response` with NA
+data_selfreport_tidied2 <- data_selfreport_tidied |>
+mutate(response = str_remove_all(response, "[^\\d.]"),
+         response = na_if(response, ""),
+         response = as.numeric(response)) 
+         
+## count number of unique_ids with correct/wrong number of responses + Exclude them
+data_selfreport_raw
+
+data_selfreport_tidied3 <- data_selfreport_tidied2 %>%
+  left_join(data_selfreport_raw %>% select(unique_id, correct), by = "unique_id")
+
+
+
+
+## check your exclusions worked - use: mutate, group_by, summarize, _join
 
 # Score measures
 
