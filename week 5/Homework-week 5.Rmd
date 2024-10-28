@@ -203,8 +203,14 @@ Create an exclusion variable `exclude_amp_completeness` based on the AMP having 
 # basic tidying
 data_selfreport_tidied <- data_selfreport_raw |>
   rename(item_type = trialcode) |>
+  rename(unique_id = subject) |>
 select(unique_id, item_type, response) |>
 filter(item_type != "instructions")
+
+data_selfreport_tidied |>
+  count(response)
+
+# <- very relevant for quality control, what information do I have? 
 
 ```
 
@@ -215,6 +221,15 @@ TODO - 14/10
 data_selfreport_tidied2 <- data_selfreport_tidied |>
 mutate(response = str_remove_all(response, "[^\\d.]"),
          response = na_if(response, "")) 
+         
+class(data_selfreport_tidied2$response) 
+
+#-> response is still a character
+
+#Character does not have an ordered level, it's either numeric (factor, has levels) or a character (has no levels)
+
+temp <-  data_selfreport_tidied2 |>
+mutate(response = as.numeric(response))
          
 ## count number of unique_ids with correct/wrong number of responses + Exclude them
 data_selfreport_tidied3 <- data_selfreport_tidied2 %>%
@@ -233,6 +248,38 @@ data_selfreport_right <- data_selfreport_tidied3 %>%
 result <- data_selfreport_tidied3 %>%
 filter(correct == "right")
 
+#testtestest 
+class(temp$response)
+
+how many unique id? 
+count unique_id + count_trials -> you see how many participants did how many trials 
+#for mean:
+#summarize does one only
+#mutate creates new rows/column, adding the value to every signle row 
+
+temp |>
+group_by(unique_id) |>
+summarize(n_trials = n()) |>
+group_by(n_trials) |>
+summarize(n_participants = n())
+
+count is group_by, summarize and then n
+
+#n counts the number of rows 
+
+temp2 <- temp |>
+group_by(unique_id) |>
+mutate(n_trials = n()) |>
+filter(n_trials = 3)
+
+temp2 <- temp |>
+count(unique_id) |>
+filter(n == 3)
+
+nrow(temp2)
+nrow(temp) -> 97 vs 293
+
+#correct number: 3, wrong number: 2 
 # Print the result
 print(result)
 
