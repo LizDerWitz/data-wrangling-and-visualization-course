@@ -82,6 +82,8 @@ nrow(data_selfreport_raw)
 
 nrow(data_amp_raw)
 
+# | works as or 
+#str_detect should be more generic as "=="
 ```
 
 - Why are there different number of rows in the three data frames when this data all comes from the same participants? 
@@ -112,6 +114,8 @@ Some data is probably missing?
 `%>%` is a version of the pipe more recently added to base-R. It is slightly faster but less flexible. 
 
 If you're not sure, it's easier to use `%>%`. 
+
+#%>% handles more expections, runs slower 
 
 ## What is the pipe?
 
@@ -563,6 +567,10 @@ class(data_selfreport_trials$response)
 data_selfreport_tidy <- data_selfreport_trials %>%
   mutate(response = ifelse(response %in% c("1", "2", "3", "4", "5", "6", "7"), response, NA),
          response = as.numeric(response))
+
+# 1-7 are technically "integer" 
+# ! to not keep them as characters, as vectors to be able to make Math
+# as.character(seq(1:7))
 
 # show the data after changes
 data_selfreport_tidy %>%
