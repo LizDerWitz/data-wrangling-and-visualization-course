@@ -75,16 +75,24 @@ data_amp_raw <- read_csv(file = "../data/raw/data_amp_raw.csv")
 A very early step in any data processing is to understand how many rows are in a data frame, as this often represents the number of participants or total number of trials. This is useful to check at multiple steps of your data processing to make sure you have not done something wrong. 
 
 ```{r}
+#data_demographics_raw |>
+#count(subject) -> 99 rows
 
+#data_amp_raw |> 
+#count(subject) -> 102 rows 
 
+#data_selfreport_raw |>
+#count(subject) -> 99 rows 
 
 ```
 
 - Why are there different number of rows in the three data frames when this data all comes from the same participants? 
 
+# More measures have been taken about the same subject -> more than one row of data for each subject
+
 - Why are the numbers not round?
 
-
+# Because some data is missing
 
 # The pipe (%>% or %>%) 
 
@@ -99,8 +107,7 @@ If you're not sure, it's easier to use `%>%`.
 The output of what is left of the pipe is used as the input to the right of the pipe, usually as the first argument or the data argument.
 
 ```{r}
-
-
+example_newpipe <- data_amp_raw
 
 ```
 
@@ -128,11 +135,24 @@ It is almost always useful to start by converting all column names to ones that 
 
 How would you bring up the help menu to understand how `janitor::clean_names()` works?
 
+?janitor::clean_names
+
 Rewrite each of the below to use the pipe.
 
 ```{r}
+data_amp_cleaned <- clean_names(data_amp_raw) |>
+  rename(unique_id = subject) |>
+  rename(rt = latency) |>
+  rename(trialrun = blockcode)
 
+data_demographics_cleaned <- clean_names(data_demographics_raw) |>
+  rename(unique_id = subject) |>
+   rename(rt = latency) 
 
+data_selfreport_cleaned <- clean_names(data_selfreport_raw) |>
+ rename(unique_id = subject) |>
+  rename(rt = latency) |>
+  rename(trialrun = blockcode)
 ```
 
 # Viewing column names
@@ -140,7 +160,9 @@ Rewrite each of the below to use the pipe.
 How would you know what variables are in a data frame? You can view the data frame, but it can also be useful to print them. Knowing what you have is one of the first steps to working with it.
 
 ```{r}
-
+colnames(data_amp_cleaned)
+colnames(data_demographics_cleaned)
+colnames(data_selfreport_cleaned)
 ```
 
 # Renaming columns 
@@ -157,9 +179,14 @@ Often variable names are not intuitive. An early step in any data wrangling is t
 Not all variables are useful to you. An early step in any data wrangling is to drop the columns that you don't need.
 
 ```{r}
+data_amp_cleaned <- data_amp_cleaned %>%
+  select(unique_id, trialrun, trialcode, rt)
 
+data_demographics_cleaned <- data_demographics_cleaned %>%
+  select(unique_id, trialnum, trialcode, response, rt)
 
-
+data_selfreport_cleaned <- data_selfreport_cleaned %>%
+  select(unique_id, )
 ```
 
 # Practice the pipe again
