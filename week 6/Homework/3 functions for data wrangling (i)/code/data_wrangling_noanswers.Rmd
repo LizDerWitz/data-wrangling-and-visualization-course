@@ -237,18 +237,27 @@ class(data_amp_cleaned$trialcode) #-> per vedere se è factor o character
 data_amp_cleaned %>%
 count(trialcode)
 
-class(data_amp_cleaned$trialcode)
+class(data_amp_cleaned$rt)
 
-
-names(data_selfreport_cleaned) %>% 
-
-
+data_amp_cleaned %>%
+count(rt)
 
 ```
 
 ```{r}
 
+names(data_selfreport_cleaned)
 
+
+class(data_selfreport_cleaned$unique_id)
+
+data_selfreport_cleaned %>%
+count(unique_id)
+
+class(data_selfreport_cleaned$trialnum)
+
+data_selfreport_cleaned %>%
+count(trialcode)
 
 ```
 
@@ -256,13 +265,15 @@ names(data_selfreport_cleaned) %>%
 
 ```
 
-## Frequncies of sets of columns
+## Frequencies of sets of columns
 
 Note that it is also possible to use count to obtain the frequencies of sets of unique values across columns, e.g., unique combinations of item and response.
 
 ```{r}
 
-
+data_selfreport_cleaned %>%
+count(unique_id, trialcode)
+print(result)
 
 ```
 
@@ -270,7 +281,11 @@ It can be useful to arrange the output by the frequencies.
 
 ```{r}
 
+data_amp_cleaned %>%
+count(unique_id, trialrun) %>%
+arrange(desc(n))               
 
+#desc => descending order
 ```
 
 # Filtering rows 
