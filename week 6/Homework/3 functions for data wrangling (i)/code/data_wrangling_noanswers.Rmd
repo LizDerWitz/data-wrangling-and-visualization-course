@@ -186,7 +186,7 @@ data_demographics_cleaned <- data_demographics_cleaned %>%
   select(unique_id, trialnum, trialcode, response, rt)
 
 data_selfreport_cleaned <- data_selfreport_cleaned %>%
-  select(unique_id, )
+  select(unique_id, trialnum, trialcode, response, rt )
 ```
 
 # Practice the pipe again
@@ -196,7 +196,19 @@ Combine the above function calls using pipes. Notice how this involves fewer obj
 Remember: this is how we solve coding problems: break them down into smaller tasks and problems, get each of them working individually, then combine them together again. When you only see the end product, it's easy to think the author simply wrote the code as you see it, when they often wrote much more verbose chunks of code and then combined them together.
 
 ```{r}
+data_amp_cleaned <- clean_names(data_amp_raw) |>
+  rename(unique_id = subject, rt = latency, trialrun = blockcode) |>
+  select(unique_id, trialrun, trialcode, rt)
 
+data_demographics_cleaned <- clean_names(data_demographics_raw) |>
+  rename(unique_id = subject, rt = latency) |>
+  select(unique_id, trialnum, trialcode, response, rt)
+
+data_selfreport_cleaned <- clean_names(data_selfreport_raw) |>
+ rename(unique_id = subject, rt = latency, trialrun = blockcode) |>
+ select(unique_id, trialnum, trialcode, response, rt )
+
+```
 
 ```
 
@@ -205,6 +217,31 @@ Remember: this is how we solve coding problems: break them down into smaller tas
 After renaming and selecting columns, we know what columns we have. But what rows do we have in each of these? What might we need to exclude, change, work with in some way later on? It is very useful to use `count()` to obtain the frequency of each unique value of a given column
 
 ```{r}
+library(dplyr)
+
+names(data_amp_cleaned)
+
+data_amp_cleaned <- data_amp_cleaned %>%
+ rename_all(make.names)  # Rende i nomi validi e univoci
+
+data_amp_cleaned |> 
+mutate(unique_id = as.character(unique_id)) |> 
+count(unique_id)
+
+data_amp_cleaned |> 
+mutate(trialrun  = as.character(trialrun)) |> 
+count(trialrun)
+
+class(data_amp_cleaned$trialcode) #-> per vedere se è factor o character
+
+data_amp_cleaned %>%
+count(trialcode)
+
+class(data_amp_cleaned$trialcode)
+
+
+names(data_selfreport_cleaned) %>% 
+
 
 
 ```
