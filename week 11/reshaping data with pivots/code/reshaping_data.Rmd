@@ -44,6 +44,11 @@ library(readr)
 library(knitr)
 library(kableExtra)
 
+#faux is too new for my version, installing another version:
+#install.packages("devtools")  
+library(devtools)
+#install_github("debruine/faux", version = "1.5")  # Example version
+
 ```
 
 # Example
@@ -54,6 +59,8 @@ library(kableExtra)
 
 # set seed for reproducibility
 set.seed(123)
+
+#starting value - it makes it reproducible 
 
 # generate data 
 data_wide <- 
@@ -72,6 +79,8 @@ data_wide_likert <- data_wide %>%
   mutate(across(starts_with("item_"), ~ round_half_up(.x, digits = 0))) %>%
   mutate(across(starts_with("item_"), ~ ifelse(.x < 1, 1, ifelse(.x > 5, 5, .x))))
 
+#across the columns 
+
 ```
 
 ## Cronbach's alpha
@@ -81,7 +90,8 @@ Wide data like this is a) common and b) useful for calculating metrics like inte
 ```{r}
 
 res_alpha <- data_wide_likert %>%
-  select(starts_with("item_")) %>%
+ #select(-id) %>% (it's another option)     the positive one, is easier cause we're ascking R directly what we need 
+   select(starts_with("item_")) %>%    #is not selecting a single score, but anything that starts with ... 
   psych::alpha()
 
 cronbachs_alpha_estimate <- res_alpha$total$raw_alpha |>
@@ -90,6 +100,8 @@ cronbachs_alpha_estimate <- res_alpha$total$raw_alpha |>
 ```
 
 Cronbach's $\alpha$ = `r cronbachs_alpha_estimate`
+
+#-> now it is shown in the summary 
 
 ## Plot simulated data
 
@@ -125,10 +137,11 @@ Using `pivot_longer()`.
 
 ```{r}
 
+#changing data structure -> no data is lost, the information just reshaped. You can change it through pivot
 data_long <- data_wide_likert %>%
-  pivot_longer(cols = starts_with("item_"),
-               names_to = "item",
-               values_to = "response")
+  pivot_longer(cols = starts_with("item_"),    #which columns are going to be used
+               names_to = "item",       #I want a new name column to item
+               values_to = "response")    #I want a new column for response 
 
 ggplot(data_long, aes(x = response)) +
   geom_histogram(binwidth = 1, boundary = -0.5) +
@@ -139,6 +152,7 @@ ggplot(data_long, aes(x = response)) +
 
 - What other ways could you specify this pivot_longer call's arguments?
 
+- facet_wrap() is to ggplot, as group_by for dplyr is 
 ### Calculate sum scores
 
 ```{r}
