@@ -28,10 +28,13 @@ options(scipen = 999)
 library(tidyr)
 library(dplyr)
 library(purrr) 
+install.packages("lavaan")
 library(lavaan)
+install.packages("semPlot")
 library(semPlot)
 library(knitr)
 library(kableExtra)
+install.packages("parameters")
 library(parameters)
 
 ```
