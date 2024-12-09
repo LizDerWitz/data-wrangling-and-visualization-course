@@ -51,6 +51,8 @@ model <- lm(wt ~ 1 + am + mpg, data = mtcars)
 # report - text output (nb omits intercept!)
 report(model)
 
+#is a complete output. One line to report the model, and one to describe it 
+
 # each parameter (including intercept)
 report_parameters(model)
 
@@ -81,6 +83,11 @@ report_table(model) |>
 parameters(model) |>
   plot() 
 
+#helps you to understand how specified is the value, visualization helps 
+
+#if you want to remove a column (t for ex.) -> you have to understand what it is -> view -> select 
+#often converting to data.frame helps 
+
 ```
 
 ## Correlations
@@ -91,6 +98,8 @@ parameters(model) |>
 
 # fit model
 model <- cor.test(mtcars$mpg, mtcars$wt)
+
+#to make single correlation tests
 
 # report - text output 
 report(model)
@@ -185,6 +194,8 @@ parameters(model) |>
 # check assumptions of random effects
 result <- check_normality(model, effects = "random")
 plot(result)
+
+#the levels of the random effect should be randomly distributed, they would be red
 
 ```
 
